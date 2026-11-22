@@ -6,13 +6,18 @@ A Claude skill that turns one still photo into a seamless looping cinemagraph: o
 ![Coffee](examples/coffee_strip.jpg)
 ![Mountains](examples/mountains_strip.jpg)
 ![Light](examples/light_strip.jpg)
+![Silk](examples/abstract_silk_strip.jpg)
+![Marbled ink](examples/abstract_marble_strip.jpg)
 
 Original, where it moves (brighter = more motion), one frame of the loop. Each example also has an MP4 and a small GIF in [`examples/`](examples/).
 
 ![Clouds drifting](examples/clouds_drift.gif)
 ![Steam rising](examples/coffee_steam.gif)
+![Light travelling along a streak](examples/light_shimmer.gif)
+![Silk flowing](examples/abstract_silk_flow.gif)
+![Marbled ink flowing](examples/abstract_marble_flow.gif)
 
-It is code, not a video model: a mask picks the moving area, a noise displacement field moves it, and two phases are blended so the last frame equals the first. Works on your own photos and drawings.
+It is code, not a video model: a mask picks the moving area, a noise displacement field moves it, and two phases are blended so the last frame equals the first. Works on your own photos, drawings and abstract art (the silk and marbled ink examples are procedural images made in numpy).
 
 ## Use it with Claude
 
@@ -39,10 +44,12 @@ python skills/stillmotion/scripts/stillmotion.py photo.jpg                      
 python skills/stillmotion/scripts/stillmotion.py sky.jpg --effect drift --dir left
 python skills/stillmotion/scripts/stillmotion.py lake.jpg --effect flow --dir right --save-mask
 python skills/stillmotion/scripts/stillmotion.py coffee.jpg --effect steam --region "32,0,64,38"
+python skills/stillmotion/scripts/stillmotion.py light.jpg --effect shimmer --dir 295      # light pulses travel along a streak
+python skills/stillmotion/scripts/stillmotion.py art.jpg --effect flow --region "0,0,100,100" --dir 60 --strength 0.4
 python skills/stillmotion/scripts/stillmotion.py winter.jpg --effect snow --density 1.5 --live
 ```
 
-Effects: `drift` (clouds slide), `flow` (water flows in `--dir`), `ripple` (lake shimmer), `shimmer` (heat haze and light flicker), `steam` (rising wisps, give it a `--region`), `snow` (falling snow overlay).
+Effects: `drift` (clouds slide), `flow` (water flows in `--dir`), `ripple` (lake shimmer), `shimmer` (heat haze and light flicker; with `--dir` the light pulses travel along that direction), `steam` (rising wisps, give it a `--region`), `snow` (falling snow overlay).
 
 Flags: `--effect`, `--region "x1,y1,x2,y2"` or polygon `"x,y;x,y;..."` in percent, `--mask mask.png` (`--invert`), `--dir`, `--speed`, `--strength`, `--density`, `--feather`, `--seconds` (default 4), `--fps` (default 24), `--live` (3 s iPhone clip), `--width`, `--gif-width`, `--no-gif`, `--save-mask`, `--seed`, `-o DIR`.
 

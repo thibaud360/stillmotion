@@ -14,7 +14,7 @@ Makes a looping cinemagraph from one photo or drawing with `scripts/stillmotion.
 | `drift` | clouds / sky slide sideways (`--dir`) | sky, found from the top edge down to the horizon |
 | `flow` | water or a river flows along `--dir` | water in the lower part of the frame |
 | `ripple` | lake surface shimmers in place | water |
-| `shimmer` | heat haze + light flicker | bright / glowing areas |
+| `shimmer` | heat haze + light flicker; with `--dir` pulses of light travel along a streak | bright / glowing areas |
 | `steam` | wisps rise from a cup | none: needs `--region` |
 | `snow` | looping falling snow overlay | whole frame |
 
@@ -45,6 +45,7 @@ Outputs go to `-o DIR` as `NAME_EFFECT.mp4`, `NAME_EFFECT.gif` (kept under about
 
 ## Notes
 
+- `flow` with `--region "0,0,100,100" --strength 0.4` also animates abstract art, silk, marbled ink or any whole-frame texture.
 - Works best when the moving part has some texture (clouds, ripples, a lit surface). A perfectly smooth gradient sky has nothing visible to move.
 - Present it as a tool for the user's own photo. Do not call the result AI art.
 - If the script is missing: `git clone --depth 1 https://github.com/thibaud360/stillmotion /tmp/stillmotion` and use `/tmp/stillmotion/skills/stillmotion/scripts/stillmotion.py`.

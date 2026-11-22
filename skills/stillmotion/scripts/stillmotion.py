@@ -303,6 +303,14 @@ class Periodic(Base):
         self.ny1, self.ny2 = (fbm(h, w, sx, sy, s + 20 + i, 3) for i in range(2))
         self.g1, self.g2 = (fbm(h, w, w * 0.12, w * 0.12, s + 30 + i, 2) for i in range(2))
         self.plate = make_plate(img, mask) if kind == "ripple" else img
+        self.travel = kind == "shimmer" and a.dir_deg is not None
+        if self.travel:   # light pulses that run along --dir (periodic: whole waves per loop)
+            ang = math.radians(a.dir_deg)
+            s_ = (self.X * math.cos(ang) + self.Y * math.sin(ang)) / w
+            self.s = s_ - s_.min()
+            self.wl = 0.55 / a.speed
+            self.env1 = fbm(h, w, w * 0.18, w * 0.18, s + 70, 2)
+            self.env2 = fbm(h, w, w * 0.18, w * 0.18, s + 71, 2)
         ys = np.where(mask.max(1) > 0.3)[0]
         self.ramp = 1.0
         if kind == "ripple" and len(ys):
@@ -322,6 +330,12 @@ class Periodic(Base):
         if self.kind == "shimmer":   # light flicker, spatially varying
             gain = 1 + 0.24 * k * self.a.strength * (self.g1 * c + self.g2 * s_)
             gain = 1 + self.m3 * (np.clip(gain, 0.6, 1.5)[..., None] - 1)
+            out = np.clip(out * gain, 0, 1)
+        if self.travel:
+            ph = 2 * math.pi * (self.s / self.wl - u * max(1, round(self.a.speed)))
+            wave = 0.5 + 0.5 * np.cos(ph + 0.8 * (self.env1 * math.cos(th) + self.env2 * math.sin(th)))
+            wave = wave ** 1.5
+            gain = 1 + self.m3 * (self.a.strength * k * 0.75 * (wave - 0.4))[..., None]
             out = np.clip(out * gain, 0, 1)
         return out
 
